@@ -14,20 +14,36 @@ boot_dialog() {
     DIALOG_CODE=$?
 }
 
+p_installing_ ()
+{
+
+    return 0
+}
+
+e_of_blocks () {
+    if [[ -n ${arr_install['st_disk']} && -n ${arr_install['type_table']} ]]; then
+        if [[ ${arr_install['type_table']} == "gpt" ]]; then 
+        echo 
+        fi
+    fi
+    return 0
+}
+
 select_disks_() {
-    items=$(sudo parted -l --machine | grep /dev/s.. | cut -b 1-8)
+    items=$(parted -l --machine | grep /dev/s.. | cut -b 1-8)
     options=()
     for item in $items; do
         options+=("$item" "")
     done
-    boot_dialog --title "Disks" --menu "" 20 60 10  "${options[@]}" 
-    arr_install['st_disk']="$DIALOG_RESULT"
+    boot_dialog --title "Disks" --menu "" 20 60 10  "${options[@]}"
     return 0
 }
 
 d_manager_() {
     case $1 in
-    1) select_disks_ ;; # which disk should I use?
+    1)  select_disks_
+        arr_install['st_disk']="$DIALOG_RESULT" 
+        ;; # which disk should I use?
     2)
         select_gpt_mbr_
         arr_install['type_table']="$DIALOG_RESULT"
@@ -66,13 +82,14 @@ set_lang_def_() {
         arr_interface_default=(['mn']="Main menu" ['lang']="Language" ['npc']="Hostname"
             ['pfr']="Password for root" ['pfu']="Password for user" ['qt']="Quit"
             ['sl']="Select language" ['en']="English" ['ru']="Russian" ['pre']="re-entry"
-            ['nur']="UserName" ['dl']="Disk layout" ['std']="Select type disk" ['sad']="Select a disk")
+            ['nur']="UserName" ['dl']="Disk layout" ['std']="Select type table" ['sad']="Select a disk" ['m_i_s']="Install system")
         ;;
     1)
         arr_install['lang']="ru_RU.UTF-8"
         arr_interface_default=(['mn']="Главное меню" ['lang']="Язык" ['qt']="Выход" ['sl']="Выбор языка" ['en']="Английский"
             ['ru']="Русский" ['npc']="Имя пк" ['nur']="Имя пользователя" ['pfr']="Пароль для root"
-            ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска")
+            ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска" ['std']="Выбор типа таблицы" 
+            ['sad']="Выбор диска" ['m_i_s']="Установка системы")
         ;;
     esac
     return 0
@@ -139,8 +156,9 @@ menu_main() {
         "3" "${arr_interface_default['nur']}" \
         "4" "${arr_interface_default['pfr']}" \
         "5" "${arr_interface_default['pfu']}" \
-        "6" "${arr_interface_default['dl']} [${arr_install['st_disk']}]" \
-        "7" "${arr_interface_default['qt']}"
+        "6" "${arr_interface_default['dl']} [${arr_install['st_disk']}],[${arr_install['type_table']}]" \
+        "7" "${arr_interface_default['m_i_s']}" \
+        "8" "${arr_interface_default['qt']}"
     return 0
 }
 
