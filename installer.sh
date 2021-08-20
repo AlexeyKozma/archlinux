@@ -37,7 +37,9 @@ e_of_blocks_() {
 }
 
 p_installing_() {
-    e_of_blocks_ #| boot_dialog --gauge "Please wait while installing" 6 60 0
+    { 
+        e_of_blocks_ 
+    } | boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
 }
 
