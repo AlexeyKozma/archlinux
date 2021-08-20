@@ -43,7 +43,7 @@ p_installing_() {
 
 select_disks_() {
     disks_all=$(sfdisk -l)
-    items=$(echo "$disks_all" | grep -e /dev/s.. | cut -b 8-13)
+    items=$(echo "$disks_all" | grep -e /dev/s.. | cut -b 6-13)
     options=()
     for item in $items; do
         options+=("$item" "")
