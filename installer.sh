@@ -21,7 +21,7 @@ e_of_blocks_() {
             echo "${arr_install['type_table']}"
             sleep 10
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
-            parted --script "${arr_install['st_disk']}" mklabel "${arr_install['type_table']}" mkpart primary ext4 0% 100%
+            echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
             sleep 10
         else 
             echo "No type!" 
