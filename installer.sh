@@ -21,7 +21,7 @@ e_of_blocks_() {
             echo "${arr_install['type_table']}"
             sleep 10
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
-            echo "parted --script ${arr_install['st_disk']} mklabel ${arr_install['type_table']} mkpart primary ext4 0% 100%"
+            parted --script "${arr_install['st_disk']}" mklabel "${arr_install['type_table']}" mkpart primary ext4 0% 100%
             sleep 10
         else 
             echo "No type!" 
@@ -42,7 +42,7 @@ p_installing_() {
 }
 
 select_disks_() {
-    items=$(parted -l --machine | grep /dev/s.. | cut -b 1-8)
+    items=$(sfdisk -l | grep -e /dev/s.. | cut -d ',' -f 1)
     options=()
     for item in $items; do
         options+=("$item" "")
