@@ -18,7 +18,7 @@ e_of_blocks_() {
     local res=0
     if [[ -n ${arr_install['st_disk']} ]]; then
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
-            echo "${arr_install['type_table']}"
+            echo "label: gpt" | sfdisk "${arr_install['st_disk']}"
             sleep 10
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
             echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
