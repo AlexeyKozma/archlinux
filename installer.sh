@@ -42,12 +42,13 @@ p_installing_() {
 }
 
 select_disks_() {
-    items=$(sfdisk -l | grep -e /dev/s.. | cut -d ',' -f 1)
+    disks_all=$(sfdisk -l)
+    items=$(echo "$disks_all" | grep -e /dev/s.. | cut -b 8-13)
     options=()
     for item in $items; do
         options+=("$item" "")
     done
-    boot_dialog --title "Disks" --menu "" 20 60 10 "${options[@]}"
+    boot_dialog --title "Disks" --menu "$disks_all" 20 60 10 "${options[@]}"
     return 0
 }
 
