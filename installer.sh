@@ -14,18 +14,30 @@ boot_dialog() {
     DIALOG_CODE=$?
 }
 
-p_installing_ ()
-{
-
-    return 0
+e_of_blocks_() {
+    local res=0
+    if [[ -n ${arr_install['st_disk']} ]]; then
+        if [[ ${arr_install['type_table']} == "GPT" ]]; then
+            echo "${arr_install['type_table']}"
+            sleep 10
+        elif [[ ${arr_install['type_table']} == "MBR" ]]; then
+            echo "parted --script ${arr_install['st_disk']} mklabel ${arr_install['type_table']} mkpart primary ext4 0% 100%"
+            sleep 10
+        else 
+            echo "No type!" 
+            sleep 10 
+            res=1 
+        fi    
+    else 
+        echo "Please, select a disk"
+        sleep 10
+        res=1   
+    fi
+    return $res
 }
 
-e_of_blocks () {
-    if [[ -n ${arr_install['st_disk']} && -n ${arr_install['type_table']} ]]; then
-        if [[ ${arr_install['type_table']} == "gpt" ]]; then 
-        echo 
-        fi
-    fi
+p_installing_() {
+    e_of_blocks_ #| boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
 }
 
@@ -35,14 +47,15 @@ select_disks_() {
     for item in $items; do
         options+=("$item" "")
     done
-    boot_dialog --title "Disks" --menu "" 20 60 10  "${options[@]}"
+    boot_dialog --title "Disks" --menu "" 20 60 10 "${options[@]}"
     return 0
 }
 
 d_manager_() {
     case $1 in
-    1)  select_disks_
-        arr_install['st_disk']="$DIALOG_RESULT" 
+    1)
+        select_disks_
+        arr_install['st_disk']="$DIALOG_RESULT"
         ;; # which disk should I use?
     2)
         select_gpt_mbr_
@@ -88,7 +101,7 @@ set_lang_def_() {
         arr_install['lang']="ru_RU.UTF-8"
         arr_interface_default=(['mn']="Главное меню" ['lang']="Язык" ['qt']="Выход" ['sl']="Выбор языка" ['en']="Английский"
             ['ru']="Русский" ['npc']="Имя пк" ['nur']="Имя пользователя" ['pfr']="Пароль для root"
-            ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска" ['std']="Выбор типа таблицы" 
+            ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска" ['std']="Выбор типа таблицы"
             ['sad']="Выбор диска" ['m_i_s']="Установка системы")
         ;;
     esac
@@ -102,11 +115,6 @@ select_lang_() {
     if [[ $? ]]; then
         set_lang_def_ $(("$DIALOG_RESULT" - 1))
     fi
-    return 0
-}
-
-fis_() {
-
     return 0
 }
 
@@ -141,6 +149,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
+    7) p_installing_ ;;
     *) exit ;;
     esac
     return 0
