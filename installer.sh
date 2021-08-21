@@ -20,38 +20,38 @@ e_of_blocks_() {
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
             #echo "label: gpt" | sfdisk "${arr_install['st_disk']}"
             parted --script "${arr_install['st_disk']}" -- mklabel gpt \
-            mkpart "boot"  1MiB 512MiB \
-            set 1 esp on \
-            mkpart "root" 512MiB -1 2> /dev/null
+                mkpart "boot" fat32 1MiB 512MiB \
+                set 1 esp on \
+            mkpart "root" ext4 512MiB -1 2>/dev/null
             sleep 1
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
             #echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
             parted --script "${arr_install['st_disk']}" -- mklabel msdos \
-            mkpart primary ext4 64s -1s \
-            set 1 boot on 2> /dev/null 
+                mkpart primary ext4 64s -1s \
+                set 1 boot on 2>/dev/null
             sleep 1
-        else 
-            echo "No type!" 
-            sleep 1 
-            res=1 
-        fi    
-    else 
+        else
+            echo "No type!"
+            sleep 1
+            res=1
+        fi
+    else
         echo "Please, select a disk"
         sleep 1
-        res=1   
+        res=1
     fi
     return $res
 }
 
 p_installing_() {
-    { 
-        e_of_blocks_ 
+    {
+        e_of_blocks_
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
 }
 
 select_disks_() {
-    disks_all=$(parted -lms 2> /dev/null | cut -d ':' -f 1,2 | grep -e /dev/s.\[a-x\])
+    disks_all=$(parted -lms 2>/dev/null | cut -d ':' -f 1,2 | grep -e /dev/s.\[a-x\])
     items=$(echo "$disks_all" | cut -d ':' -f 1)
     options=()
     for item in $items; do
