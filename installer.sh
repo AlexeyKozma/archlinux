@@ -14,8 +14,6 @@ boot_dialog() {
     DIALOG_CODE=$?
 }
 
-
-
 e_of_blocks_() {
     local res=0
     if [[ -n ${arr_install['st_disk']} ]]; then
@@ -24,7 +22,7 @@ e_of_blocks_() {
             parted --script "${arr_install['st_disk']}" -- mklabel gpt \
                 mkpart "boot" fat32 1MiB 512MiB \
                 set 1 esp on \
-            mkpart "root" ext4 512MiB -1 2>/dev/null
+                mkpart "root" ext4 512MiB -1 2>/dev/null
             sleep 1
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
             #echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
@@ -46,12 +44,12 @@ e_of_blocks_() {
 }
 
 p_installing_() {
-    install_list=( "e_of_blocks_" )
+    install_list=(e_of_blocks_)
     {
-        for ((i = 0; i<=${#install_list[@]}; i++)); do  
-            res=$(install_list["$i"])
+        for ((i = 0; i < ${#install_list[@]}; i++)); do
+            ${install_list["$i"]}
             echo "$i"
-            sleep 5
+            sleep 1
         done
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
