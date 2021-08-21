@@ -48,7 +48,7 @@ p_installing_() {
     {
         for ((i = 0; i < ${#install_list[@]}; i++)); do
             ${install_list["$i"]}
-            echo "$i"
+            echo "(($i + 1))"
             sleep 1
         done
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
