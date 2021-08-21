@@ -14,6 +14,8 @@ boot_dialog() {
     DIALOG_CODE=$?
 }
 
+
+
 e_of_blocks_() {
     local res=0
     if [[ -n ${arr_install['st_disk']} ]]; then
@@ -45,7 +47,7 @@ e_of_blocks_() {
 
 p_installing_() {
     {
-        e_of_blocks_
+        e_of_blocks_ "$?"
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
 }
