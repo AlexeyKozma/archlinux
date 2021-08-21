@@ -25,7 +25,7 @@ e_of_blocks_() {
             #echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
             parted --script "${arr_install['st_disk']}" -- mklabel msdos \
             mkpart primary ext4 64s -1s \
-            set 1 boot on
+            set 1 boot on 2> /dev/null 
             sleep 1
         else 
             echo "No type!" 
