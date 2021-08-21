@@ -45,8 +45,8 @@ p_installing_() {
 }
 
 select_disks_() {
-    disks_all=$(sfdisk -l)
-    items=$(echo "$disks_all" | grep -e /dev/s.. | cut -b 6-13)
+    disks_all=$(parted -lsm | grep -e /dev/s.\[a-z\] | cut -d ':' -f 1,2,6)
+    items=$("$disks_all" | cut -d ':' -f 1)
     options=()
     for item in $items; do
         options+=("$item" "")
