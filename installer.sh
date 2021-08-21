@@ -19,7 +19,7 @@ e_of_blocks_() {
     if [[ -n ${arr_install['st_disk']} ]]; then
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
             #echo "label: gpt" | sfdisk "${arr_install['st_disk']}"
-            parted "${arr_install['st_disk']}" mklabel gpt mkpart P1 ext4 1MiB 8MiB
+            parted --script "${arr_install['st_disk']}" mklabel gpt mkpart P1 ext4 1MiB 8MiB
             sleep 1
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
             #echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
