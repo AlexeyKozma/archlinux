@@ -18,14 +18,12 @@ e_of_blocks_() {
     local res=0
     if [[ -n ${arr_install['st_disk']} ]]; then
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
-            #echo "label: gpt" | sfdisk "${arr_install['st_disk']}"
             parted --script "${arr_install['st_disk']}" -- mklabel gpt \
                 mkpart "boot" fat32 1MiB 512MiB \
                 set 1 esp on \
                 mkpart "root" ext4 512MiB -1 2>/dev/null
             sleep 1
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
-            #echo "label: mbr" | sfdisk "${arr_install['st_disk']}"
             parted --script "${arr_install['st_disk']}" -- mklabel msdos \
                 mkpart primary ext4 64s -1s \
                 set 1 boot on 2>/dev/null
@@ -46,9 +44,11 @@ e_of_blocks_() {
 p_installing_() {
     install_list=(e_of_blocks_)
     {
+        progress=0
         for ((i = 0; i < ${#install_list[@]}; i++)); do
             ${install_list["$i"]}
-            echo "(($i + 1))"
+            ++progress
+            echo "$progress"
             sleep 1
         done
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
