@@ -46,8 +46,11 @@ e_of_blocks_() {
 }
 
 p_installing_() {
+    install_list=( "e_of_blocks_" )
     {
-        e_of_blocks_ "$?"
+        for ((i = 0; i<=${#install_list[@]}; i++)); do 
+            echo "$i" 
+        done
     } | boot_dialog --gauge "Please wait while installing" 6 60 0
     return 0
 }
