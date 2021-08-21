@@ -44,10 +44,9 @@ e_of_blocks_() {
 p_installing_() {
     install_list=(e_of_blocks_)
     {
-        progress=0
         for ((i = 0; i < ${#install_list[@]}; i++)); do
             ${install_list["$i"]}
-            ++progress
+            progress=$(("$i" + 1))
             echo "$progress"
             sleep 1
         done
