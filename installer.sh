@@ -26,7 +26,7 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    disk_info="${parted -sm "${arr_install['st_disk']} print"}"
+    parted -sm "${arr_install['st_disk']} print"
     #if [[ ${arr_install['type_table']} == "GPT" ]]  
     return 0
 }
