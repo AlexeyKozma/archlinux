@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --title "Testing" --msgbox "$@" 8 78
+    boot_dialog --title "Testing" --msgbox "$(parted -sm "${arr_install['st_disk']} print")" 8 78
     return 0
 }
 
@@ -26,7 +26,7 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    parted -sm "${arr_install['st_disk']} print"
+    #parted -sm "${arr_install['st_disk']} print"
     #if [[ ${arr_install['type_table']} == "GPT" ]]  
     return 0
 }
@@ -179,7 +179,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) testing_ "$(d_mount_)";;    
+    7) testing_ ;;    
     8) p_installing_ ;;
     *) exit ;;
     esac
