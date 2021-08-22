@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --title "Testing" --msgbox "$(parted -sm "${arr_install['st_disk']} print")" 8 78
+    boot_dialog --title "Testing" --msgbox "$@" 8 78
     return 0
 }
 
