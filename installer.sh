@@ -8,19 +8,19 @@
 declare -a arr_filters
 declare -A arr_interface_default
 declare -A arr_install
-arr_install=(['lang']="en_US.UTF-8" ['country']="United States")
+arr_install=(['lang']="en_US.UTF-8" ['country']="US")
 boot_dialog() {
     DIALOG_RESULT=$(whiptail --clear --backtitle " Arch Linux" "$@" 3>&1 1>&2 2>&3)
     DIALOG_CODE=$?
 }
 
 testing_() {
-    boot_dialog --title "Testing" --msgbox "${arr_install['lang']:3:5}" 8 78
+    boot_dialog --title "Testing" --msgbox "${arr_install['country']}" 8 78
     return 0
 }
 
 set_mirror_list_() {
-        curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['lang']:3:5}&protocol=http&protocol=https&ip_version=4 2>err.out
+        curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['country']}&protocol=http&protocol=https&ip_version=4 2>err.out
         sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist 2>>err.out
         pacman -Syu pacman-mirrorlist 2>>err.out
     return 0
@@ -123,7 +123,7 @@ set_lang_def_() {
             ['nur']="UserName" ['dl']="Disk layout" ['std']="Select type table" ['sad']="Select a disk" ['m_i_s']="Install system" ['test']="Testing")
         ;;
     1)
-        arr_install=(['lang']="ru_RU.UTF-8" ['country']="Russia")
+        arr_install=(['lang']="ru_RU.UTF-8" ['country']="RU")
         arr_interface_default=(['mn']="Главное меню" ['lang']="Язык" ['qt']="Выход" ['sl']="Выбор языка" ['en']="Английский"
             ['ru']="Русский" ['npc']="Имя пк" ['nur']="Имя пользователя" ['pfr']="Пароль для root"
             ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска" ['std']="Выбор типа таблицы"
