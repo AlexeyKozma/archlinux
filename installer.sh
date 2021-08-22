@@ -15,13 +15,22 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --title "Testing" --msgbox "${arr_install['country']}" 8 78
+    boot_dialog --title "Testing" --msgbox "$1" 8 78
     return 0
 }
 
 set_mirror_list_() {
         curl -s "https://archlinux.org/mirrorlist/?country=${arr_install['country']}&protocol=http&protocol=https&ip_version=4" >/etc/pacman.d/mirrorlist && \
         sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist
+    return 0
+}
+
+d_mount_() {
+    if [[ -f /dev/${arr_install['st_disk']} ]]; then 
+        echo "/dev/${arr_install['st_disk']}"
+    else  
+        echo "The disk do not find /dev/${arr_install['st_disk']}"   
+    fi    
     return 0
 }
 
@@ -173,7 +182,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) testing_;;    
+    7) testing_ "$(d_mount_)";;    
     8) p_installing_ ;;
     *) exit ;;
     esac
