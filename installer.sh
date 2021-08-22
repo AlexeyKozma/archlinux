@@ -23,7 +23,7 @@ set_mirror_list_() {
         cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
         curl -s "https://archlinux.org/mirrorlist/?country=${arr_install['country']}&protocol=http&protocol=https&ip_version=4" > /etc/pacman.d/mirrorlist.backup
         sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup
-        rankmirrors -n 3 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist 
+        cp /etc/pacman.d/mirrorlist.backup /etc/pacman.d/mirrorlist 
         pacman -Syu pacman-mirrorlist 2>>err.out
     return 0
 }
