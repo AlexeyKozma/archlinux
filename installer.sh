@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --textbox "$1" 12 80
+    boot_dialog --title "Example Dialog" --msgbox "$@" 8 78
     return 0
 }
 
