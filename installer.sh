@@ -26,7 +26,7 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    if [[ -f /dev/${arr_install['st_disk']} ]]; then 
+    if [[ -e ${arr_install['st_disk']} ]]; then 
         echo "/dev/${arr_install['st_disk']}"
     else  
         echo "The disk do not find /dev/${arr_install['st_disk']}"   
