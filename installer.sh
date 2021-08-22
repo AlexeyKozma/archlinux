@@ -14,6 +14,11 @@ boot_dialog() {
     DIALOG_CODE=$?
 }
 
+testing_() {
+    boot_dialog --title "Testing" --msgbox "${arr_install['lang']:3:5}" 8 78
+    return 0
+}
+
 set_mirror_list_() {
         curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['lang']:3:5}&protocol=http&protocol=https&ip_version=4 2>err.out
         sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist 2>>err.out
@@ -115,14 +120,14 @@ set_lang_def_() {
         arr_interface_default=(['mn']="Main menu" ['lang']="Language" ['npc']="Hostname"
             ['pfr']="Password for root" ['pfu']="Password for user" ['qt']="Quit"
             ['sl']="Select language" ['en']="English" ['ru']="Russian" ['pre']="re-entry"
-            ['nur']="UserName" ['dl']="Disk layout" ['std']="Select type table" ['sad']="Select a disk" ['m_i_s']="Install system")
+            ['nur']="UserName" ['dl']="Disk layout" ['std']="Select type table" ['sad']="Select a disk" ['m_i_s']="Install system" ['test']="Testing")
         ;;
     1)
         arr_install=(['lang']="ru_RU.UTF-8" ['country']="Russia")
         arr_interface_default=(['mn']="Главное меню" ['lang']="Язык" ['qt']="Выход" ['sl']="Выбор языка" ['en']="Английский"
             ['ru']="Русский" ['npc']="Имя пк" ['nur']="Имя пользователя" ['pfr']="Пароль для root"
             ['pfu']="Пароль для пользователя" ['pre']="повторный ввод" ['dl']="Разметка диска" ['std']="Выбор типа таблицы"
-            ['sad']="Выбор диска" ['m_i_s']="Установка системы")
+            ['sad']="Выбор диска" ['m_i_s']="Установка системы" ['test']="Тестирование")
         ;;
     esac
     return 0
@@ -169,7 +174,8 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) p_installing_ ;;
+    7) testing_;;    
+    8) p_installing_ ;;
     *) exit ;;
     esac
     return 0
@@ -186,8 +192,9 @@ menu_main() {
         "4" "${arr_interface_default['pfr']}" \
         "5" "${arr_interface_default['pfu']}" \
         "6" "${arr_interface_default['dl']} [${arr_install['st_disk']}],[${arr_install['type_table']}]" \
-        "7" "${arr_interface_default['m_i_s']}" \
-        "8" "${arr_interface_default['qt']}"
+        "7" "${arr_interface_default['test']}" \
+        "8" "${arr_interface_default['m_i_s']}" \
+        "9" "${arr_interface_default['qt']}"
     return 0
 }
 
