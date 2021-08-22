@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --textbox "$@" 12 80
+    boot_dialog --textbox "$1" 12 80
     return 0
 }
 
@@ -186,7 +186,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) d_mount_;;    
+    7) testing_ "$(d_mount_)";;    
     8) p_installing_ ;;
     *) exit ;;
     esac
