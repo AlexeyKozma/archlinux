@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    whiptail --textbox "$@" 12 80
+    boot_dialog --textbox "$@" 12 80
     return 0
 }
 
