@@ -15,10 +15,9 @@ boot_dialog() {
 }
 
 set_mirror_list_() {
-        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup 2>err.out
-        awk "/^## ${arr_install['country']}$/{f=1; next}f==0{next}/^$/{exit}{print substr($0, 1);}" /etc/pacman.d/mirrorlist.backup 2>>err.out
-        sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup 2>>err.out
-        rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist 2>>err.out
+        curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['country']}&protocol=http&protocol=https&ip_version=4 2>err.out
+        sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist 2>>err.out
+        pacman -Syu pacman-mirrorlist 2>>err.out
     return 0
 }
 
