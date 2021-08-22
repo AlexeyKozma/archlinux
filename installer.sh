@@ -33,6 +33,7 @@ d_mount_() {
         #mkdir -p /mnt/boot/efi
         #mount "${arr_install['st_disk']}""$(label_boot:1)" mnt/boot/efi
         echo "${arr_install['st_disk']}""$(label_boot:1)"
+        sleep 1
     fi  
     return 0
 }
