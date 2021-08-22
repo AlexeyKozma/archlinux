@@ -27,9 +27,9 @@ set_mirror_list_() {
 
 d_mount_() {
     if [[ -e ${arr_install['st_disk']} ]]; then 
-        echo "/dev/${arr_install['st_disk']}"
+        lsblk "${arr_install['st_disk']}"
     else  
-        echo "The disk do not find /dev/${arr_install['st_disk']}"   
+        echo "The disk do not find ${arr_install['st_disk']}"   
     fi    
     return 0
 }
