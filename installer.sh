@@ -15,7 +15,7 @@ boot_dialog() {
 }
 
 set_mirror_list_() {
-        curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['country']}&protocol=http&protocol=https&ip_version=4 2>err.out
+        curl -o /etc/pacman.d/mirrorlist https://archlinux.org/mirrorlist/?country=${arr_install['lang']:4:6}&protocol=http&protocol=https&ip_version=4 2>err.out
         sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist 2>>err.out
         pacman -Syu pacman-mirrorlist 2>>err.out
     return 0
