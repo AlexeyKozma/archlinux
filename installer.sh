@@ -15,10 +15,10 @@ boot_dialog() {
 }
 
 set_mirror_list_() {
-        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-        awk "/^## ${arr_install['country']}$/{f=1; next}f==0{next}/^$/{exit}{print substr($0, 1);}" /etc/pacman.d/mirrorlist.backup
-        sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup
-        rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
+        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup 2>err.out
+        awk "/^## ${arr_install['country']}$/{f=1; next}f==0{next}/^$/{exit}{print substr($0, 1);}" /etc/pacman.d/mirrorlist.backup 2>>err.out
+        sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup 2>>err.out
+        rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist 2>>err.out
     return 0
 }
 
