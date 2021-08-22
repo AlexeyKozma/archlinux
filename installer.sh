@@ -8,7 +8,7 @@
 declare -a arr_filters
 declare -A arr_interface_default
 declare -A arr_install
-arr_install=(['lang']="en_US.UTF-8" ['country']="US")
+arr_install=(['lang']="en_US.UTF-8" ['country']="US" ['label_b']="boot" ['label_r']="root")
 boot_dialog() {
     DIALOG_RESULT=$(whiptail --clear --backtitle " Arch Linux" "$@" 3>&1 1>&2 2>&3)
     DIALOG_CODE=$?
@@ -26,11 +26,8 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    if [[ -e ${arr_install['st_disk']} ]]; then 
-        lsblk "${arr_install['st_disk']}"
-    else  
-        echo "The disk do not find ${arr_install['st_disk']}"   
-    fi    
+    disk_info=$(parted -sm "${arr_install['st_disk']} print")
+    #if [[ ${arr_install['type_table']} == "GPT" ]]  
     return 0
 }
 
@@ -39,9 +36,9 @@ e_of_blocks_() {
     if [[ -n ${arr_install['st_disk']} ]]; then
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
             parted --script "${arr_install['st_disk']}" -- mklabel gpt \
-                mkpart "boot" fat32 1MiB 512MiB \
+                mkpart arr_"${arr_install['label_b']}" fat32 1MiB 512MiB \
                 set 1 esp on \
-                mkpart "root" ext4 512MiB -1 2>/dev/null
+                mkpart "${arr_install['label_r']}" ext4 512MiB -1 2>/dev/null
             sleep 1
         elif [[ ${arr_install['type_table']} == "MBR" ]]; then
             parted --script "${arr_install['st_disk']}" -- mklabel msdos \
