@@ -32,7 +32,7 @@ d_mount_() {
         label_root=$(echo $lebel_all | grep root)
         #mkdir -p /mnt/boot/efi
         #mount "${arr_install['st_disk']}""$(label_boot:1)" mnt/boot/efi
-        echo "AAAAAAAAAAAA"
+        echo "${arr_install['st_disk']}$label_boot:1" >> pr_0.out
         sleep 10
     fi  
     return 0
