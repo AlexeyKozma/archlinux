@@ -15,7 +15,13 @@ boot_dialog() {
 }
 
 testing_() {
-    boot_dialog --title "Testing" --msgbox "$*" 8 78
+    #boot_dialog --title "Testing" --msgbox "$*" 8 78
+    items=$(parted -sm "${arr_install['st_disk']}" print | cut -d ':' -f 1)
+    options=()
+    for item in $items; do
+        options+=("$item" "")
+    done
+    boot_dialog --textbox "${options[@]}" 12 80
     return 0
 }
 
@@ -179,7 +185,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) testing_ "$(d_mount_)";;    
+    7) testing_ ;;    
     8) p_installing_ ;;
     *) exit ;;
     esac
