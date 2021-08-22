@@ -21,7 +21,7 @@ testing_() {
     for item in $items; do
         options+=("$item" "")
     done
-    whiptail --textbox "${options[@]}" 12 80
+    boot_dialog --title "Testing" --msgbox "${options[@]}" 12 80
     return 0
 }
 
