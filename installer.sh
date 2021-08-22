@@ -15,13 +15,7 @@ boot_dialog() {
 }
 
 testing_() {
-    #boot_dialog --title "Testing" --msgbox "$*" 8 78
-    items=$(parted -sm "${arr_install['st_disk']}" print | cut -d ':' -f 1)
-    options=()
-    for item in $items; do
-        options+=("$item" "")
-    done
-    boot_dialog --title "Testing" --msgbox "${options[@]}" 12 80
+    
     return 0
 }
 
@@ -32,8 +26,14 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    parted -sm "${arr_install['st_disk']}" print
-    #if [[ ${arr_install['type_table']} == "GPT" ]]  
+    if [[ ${arr_install['type_table']} == "GPT" ]]; then
+        lebel_all=$(parted -sm "${arr_install['st_disk']}" print | cut -d ':' -f 1,6)
+        label_boot=$(echo $lebel_all | grep boot)
+        label_root=$(echo $lebel_all | grep root)
+        #mkdir -p /mnt/boot/efi
+        #mount "${arr_install['st_disk']}""$(label_boot:1)" mnt/boot/efi
+        echo "${arr_install['st_disk']}""$(label_boot:1)"
+    fi  
     return 0
 }
 
@@ -42,7 +42,7 @@ e_of_blocks_() {
     if [[ -n ${arr_install['st_disk']} ]]; then
         if [[ ${arr_install['type_table']} == "GPT" ]]; then
             parted --script "${arr_install['st_disk']}" -- mklabel gpt \
-                mkpart arr_"${arr_install['label_b']}" fat32 1MiB 512MiB \
+                mkpart "${arr_install['label_b']}" fat32 1MiB 512MiB \
                 set 1 esp on \
                 mkpart "${arr_install['label_r']}" ext4 512MiB -1 2>/dev/null
             sleep 1
@@ -185,7 +185,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) testing_ ;;    
+    7) testing_ "(d_mount_)";;    
     8) p_installing_ ;;
     *) exit ;;
     esac
