@@ -26,7 +26,7 @@ set_mirror_list_() {
 }
 
 d_mount_() {
-    #if [[ ${arr_install['type_table']} == "GPT" ]]; then
+    if [[ ${arr_install['type_table']} == "GPT" ]]; then
         lebel_all=$(parted -sm "${arr_install['st_disk']}" print | cut -d ':' -f 1,6)
         label_boot=$(echo $lebel_all | grep boot)
         label_root=$(echo $lebel_all | grep root)
@@ -34,7 +34,7 @@ d_mount_() {
         #mount "${arr_install['st_disk']}""$(label_boot:1)" mnt/boot/efi
         echo "${arr_install['st_disk']}$label_boot:1" >> pr_0.out
         sleep 10
-    #fi  
+    fi  
     return 0
 }
 
@@ -186,7 +186,7 @@ menu_meager() {
         disks_
         d_manager_ "$DIALOG_RESULT"
         ;;
-    7) testing_ "${d_mount_}";;    
+    7) testing_ "$(d_mount_)";;    
     8) p_installing_ ;;
     *) exit ;;
     esac
